@@ -65,7 +65,7 @@ USAGE: start_autotools.sh [OPTIONS]
 echo -n "-h | --help            "
 echo "Show a helpful message just like this one, then exit"
 #-H | --<unused>
-#-i | --<unused>
+echo "-i | --init-filename      Filename in which to initialize int main()"
 #-I | --<unused>
 #-j | --<unused>
 #-J | --<unused>
@@ -154,6 +154,11 @@ while test "${CURRENT}"; do
                         exit 0
                         ;;
 
+                -i | --init-filename)
+                        (( INDEX+=1 ))
+                        PROJECT_FILENAME="${ARGV[INDEX]}"
+                        ;;
+
                 -n | --name)
                         (( INDEX+=1 ))
                         PROJECT_NAME="${ARGV[INDEX]}"
@@ -174,8 +179,9 @@ echo
 echo
 
 # Test project settings and set defaults where apropos
-if test -z $PROJECT_PREFIX ; then PROJECT_PREFIX=$PWD ; fi
-if test -z $PROJECT_NAME   ; then PROJECT_NAME="foo"  ; fi
+if test -z $PROJECT_PREFIX   ; then PROJECT_PREFIX=$PWD     ; fi
+if test -z $PROJECT_NAME     ; then PROJECT_NAME="foo"      ; fi
+if test -z $PROJECT_FILENAME ; then PROJECT_FILENAME="main" ; fi
 
 PROJECT_DIR=$PROJECT_PREFIX/$PROJECT_NAME
 
@@ -184,9 +190,9 @@ if test ! -d $PROJECT_DIR; then
         mkdir -pv ${PROJECT_DIR}/src
 fi
 
-cat << EOF > $PROJECT_DIR/src/main.c
+cat << EOF > $PROJECT_DIR/src/${PROJECT_FILENAME}.c
 /**
- * FILE: main.c
+ * FILE: ${PROJECT_FILENAME}.c
  *
  * This file is part of ${PROJECT_NAME}
  *
@@ -207,7 +213,7 @@ EOF
 
 cat << EOF > $PROJECT_DIR/src/Makefile.am
 bin_PROGRAMS = ${PROJECT_NAME}
-${PROJECT_NAME}_SOURCES = main.c
+${PROJECT_NAME}_SOURCES = ${PROJECT_FILENAME}.c
 #${PROJECT_NAME}_CPPFLAGS =
 #${PROJECT_NAME}_LDADD =
 EOF
