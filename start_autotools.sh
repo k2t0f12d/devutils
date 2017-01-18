@@ -186,7 +186,9 @@ fi
 
 cat << EOF > $PROJECT_DIR/src/main.c
 /**
- * FILE: ${PROJECT_NAME}.c
+ * FILE: main.c
+ *
+ * This file is part of ${PROJECT_NAME}
  *
  */
 
