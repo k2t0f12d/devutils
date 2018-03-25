@@ -186,8 +186,13 @@ if test -z $PROJECT_FILENAME ; then PROJECT_FILENAME="main" ; fi
 PROJECT_DIR=$PROJECT_PREFIX/$PROJECT_NAME
 
 # Test if project directory exists; else make it
-if test ! -d $PROJECT_DIR; then
-        mkdir -pv ${PROJECT_DIR}/src
+if test -d $PROJECT_DIR; then
+        if test "$(ls -A "${PROJECT_DIR}")"; then
+                echo "The target path for autotools is not empty!"
+                exit 1
+        else
+                mkdir -pv ${PROJECT_DIR}/src
+        fi
 fi
 
 cat << EOF > $PROJECT_DIR/src/${PROJECT_FILENAME}.c
